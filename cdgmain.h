@@ -25,7 +25,7 @@ struct MainConfig {
 
 	MainConfig() {
 		desiredFps = 30;
-		scaling = 2;
+		scaling = 4;
 		autostart = quitOnEof = fullscreen = hasAutoFile = hasAutoAudioFile = showBorder = false;
 		useUI = useKeys = audioEnabled = true;
 

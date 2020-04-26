@@ -3,7 +3,7 @@
 #include "cdgrenderer.h"
 #include "png.h"
 
-void cdg_render(const CDG &cdg, SDL_Renderer *out, bool maskBorder, int scaling)
+void cdg_render(const CDG &cdg, SDL_Renderer *renderer, bool maskBorder, int scaling)
 {
 	uint8_t pv, ph;
 	uint8_t r, g, b, a;
@@ -20,8 +20,8 @@ void cdg_render(const CDG &cdg, SDL_Renderer *out, bool maskBorder, int scaling)
 			for (int y = 0; y + pv < CDG_HEIGHT; y++)
 			{
 				cdg.getColor(cdg.getPixel(x + ph, y + pv), r, g, b, a);
-				SDL_SetRenderDrawColor(out, r, g, b, ~a);
-				SDL_RenderDrawPoint(out, x, y);
+				SDL_SetRenderDrawColor(renderer, r, g, b, ~a);
+				SDL_RenderDrawPoint(renderer, x, y);
 			}
 		}
 	}
@@ -31,17 +31,14 @@ void cdg_render(const CDG &cdg, SDL_Renderer *out, bool maskBorder, int scaling)
 		{
 			for (int y = 0; y + pv < CDG_HEIGHT; y++)
 			{
-				int lx = x * scaling;
-				int ly = y * scaling;
 				cdg.getColor(cdg.getPixel(x + ph, y + pv), r, g, b, a);
-				SDL_SetRenderDrawColor(out, r, g, b, ~a);
-				for (int xs = 0; xs < scaling; xs++)
-				{
-					for (int ys = 0; ys < scaling; ys++)
-					{
-						SDL_RenderDrawPoint(out, lx + xs, ly + ys);
-					}
-				}
+				SDL_SetRenderDrawColor(renderer, r, g, b, ~a);
+				SDL_Rect pixelRect;
+				pixelRect.x = x * scaling;
+				pixelRect.y = y * scaling;
+				pixelRect.w = scaling;
+				pixelRect.h = scaling;
+				SDL_RenderFillRect(renderer, &pixelRect);
 			}
 		}
 	}
@@ -50,23 +47,23 @@ void cdg_render(const CDG &cdg, SDL_Renderer *out, bool maskBorder, int scaling)
 	{
 		cdg.getColor(border, r, g, b, a);
 		
-		SDL_SetRenderDrawColor(out, r, g, b, ~a);
+		SDL_SetRenderDrawColor(renderer, r, g, b, ~a);
 		SDL_Rect rect;
 		rect.x = 0;
 		rect.y = 0;
 		rect.w = CDG_WIDTH * scaling;
 		rect.h = ROW_MULT * scaling;
-		SDL_RenderFillRect(out, &rect);
+		SDL_RenderFillRect(renderer, &rect);
 		rect.w = COL_MULT * scaling;
 		rect.h = CDG_HEIGHT * scaling;
-		SDL_RenderFillRect(out, &rect);
+		SDL_RenderFillRect(renderer, &rect);
 		rect.x = (CDG_WIDTH - COL_MULT) * scaling;
-		SDL_RenderFillRect(out, &rect);
+		SDL_RenderFillRect(renderer, &rect);
 		rect.x = 0;
 		rect.y = (CDG_HEIGHT - ROW_MULT) * scaling;
 		rect.w = CDG_WIDTH * scaling;
 		rect.h = ROW_MULT * scaling;
-		SDL_RenderFillRect(out, &rect);
+		SDL_RenderFillRect(renderer, &rect);
 	}
 }
 
