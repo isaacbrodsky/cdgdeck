@@ -4,6 +4,11 @@
 #include "cdgui.h"
 #include "vera.h"
 
+const char* CHANNEL_TEXT[] = {
+	"0", "1", "2", "3", "4", "5", "6", "7", "8",
+	"9", "10", "11", "12", "13", "14", "15"
+};
+
 CDGUI::CDGUI() {
 	TTF_Init();
 	//if this fails we'll crash, but what do I care?
@@ -29,7 +34,7 @@ CDGUI::~CDGUI() {
 }
 
 void CDGUI::resetButtonStates() {
-	btnPlayDown = btnLoadCDGDown = btnLoadAudioDown = btnSaveImageDown = btnPauseDown = btnStopDown = btnSeekbarDown = false;
+	btnPlayDown = btnLoadCDGDown = btnLoadAudioDown = btnSaveImageDown = btnPauseDown = btnStopDown = btnChannelDownDown = btnChannelUpDown = btnSeekbarDown = false;
 }
 
 Button CDGUI::mouseLocationToButton(const SDL_Event *event, const MainConfig *config) {
@@ -50,6 +55,12 @@ Button CDGUI::mouseLocationToButton(const SDL_Event *event, const MainConfig *co
 			return B_LOADAUDIO;
 		else if (x < UI_WIDTH * 6)
 			return B_SAVEIMAGE;
+		else if (x < UI_WIDTH * 7)
+			return B_CHANNEL_DOWN;
+		else if (x < UI_WIDTH * 8)
+			return B_NONE; // channel indicator
+		else if (x < UI_WIDTH * 9)
+			return B_CHANNEL_UP;
 		else
 			return B_SEEKBAR;
 	}
@@ -78,6 +89,12 @@ void CDGUI::processMouseDown(MainRunState *run, const MainConfig *config) {
 		break;
 	case B_SAVEIMAGE:
 		btnSaveImageDown = true;
+		break;
+	case B_CHANNEL_DOWN:
+		btnChannelDownDown = true;
+		break;
+	case B_CHANNEL_UP:
+		btnChannelUpDown = true;
 		break;
 	case B_SEEKBAR:
 		btnSeekbarDown = true;
@@ -119,6 +136,24 @@ void CDGUI::processMouseUp(MainRunState *run, const MainConfig *config) {
 		if (btnSaveImageDown)
 			run->dumpImage = true;
 		break;
+	case B_CHANNEL_DOWN:
+		if (btnChannelDownDown) {
+			if (run->channel == 1) {
+				run->nextChannel = 15;
+			} else {
+				run->nextChannel = run->channel - 1;
+			}
+		}
+		break;
+	case B_CHANNEL_UP:
+		if (btnChannelUpDown) {
+			if (run->channel == 15) {
+				run->nextChannel = 1;
+			} else {
+				run->nextChannel = run->channel + 1;
+			}
+		}
+		break;
 	case B_SEEKBAR:
 		if (btnSeekbarDown) {
 			double percent = double((UI_WIDTH * UI_NUM_BUTTONS) - run->event.button.x) / double((UI_WIDTH * UI_NUM_BUTTONS) - config->w);
@@ -148,7 +183,10 @@ void CDGUI::render(SDL_Renderer *renderer, const MainRunState *run, const MainCo
 		btnStopDown,
 		btnLoadCDGDown,
 		btnLoadAudioDown,
-		btnSaveImageDown
+		btnSaveImageDown,
+		btnChannelDownDown,
+		false,
+		btnChannelUpDown
 	};
 	const char* btnText[] = {
 		"Play",
@@ -156,10 +194,13 @@ void CDGUI::render(SDL_Renderer *renderer, const MainRunState *run, const MainCo
 		"Stop",
 		"Open",
 		"Audio",
-		"SaveImg"
+		"SavImg",
+		"Ch-",
+		CHANNEL_TEXT[run->channel],
+		"Ch+"
 	};
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < UI_NUM_BUTTONS; i++) {
 		SDL_Rect border;
 		border.x = (UI_WIDTH * i);
 		border.y = hoff;
@@ -183,9 +224,9 @@ void CDGUI::render(SDL_Renderer *renderer, const MainRunState *run, const MainCo
 		SDL_SetRenderDrawColor(renderer, 163, 163, 163, 255);
 	}
 	SDL_Rect seekbarRect;
-	seekbarRect.x = (UI_WIDTH * 6) + 1;
+	seekbarRect.x = (UI_WIDTH * UI_NUM_BUTTONS) + 1;
 	seekbarRect.y = hoff + 1;
-	seekbarRect.w = config->w - (UI_WIDTH * 6) - 1;
+	seekbarRect.w = config->w - (UI_WIDTH * UI_NUM_BUTTONS) - 1;
 	seekbarRect.h = UI_HEIGHT - 1;
 	SDL_RenderFillRect(renderer, &seekbarRect);
 	if (run->cdgLoaded) {
@@ -195,9 +236,9 @@ void CDGUI::render(SDL_Renderer *renderer, const MainRunState *run, const MainCo
 			SDL_SetRenderDrawColor(renderer, 83, 83, 83, 255);
 		}
 		SDL_Rect posRect;
-		posRect.x = (UI_WIDTH * 6) + 1;
+		posRect.x = (UI_WIDTH * UI_NUM_BUTTONS) + 1;
 		posRect.y = hoff + 1;
-		posRect.w = int((config->w - (UI_WIDTH * 6) - 1) * (run->cdgLoc / double(run->cdgStat.st_size)));
+		posRect.w = int((config->w - (UI_WIDTH * UI_NUM_BUTTONS) - 1) * (run->cdgLoc / double(run->cdgStat.st_size)));
 		posRect.h = UI_HEIGHT - 1;
 		SDL_RenderFillRect(renderer, &posRect);
 		
@@ -208,6 +249,6 @@ void CDGUI::render(SDL_Renderer *renderer, const MainRunState *run, const MainCo
 #else
 		sprintf(postext, "%i / %i (seconds)", cursecs, limsecs);
 #endif
-		render_text(renderer, (UI_WIDTH * 6) + 4, hoff + 4, font, text, postext);
+		render_text(renderer, (UI_WIDTH * UI_NUM_BUTTONS) + 4, hoff + 4, font, text, postext);
 	}
 }

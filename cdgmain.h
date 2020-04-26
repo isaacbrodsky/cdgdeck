@@ -25,7 +25,7 @@ struct MainConfig {
 
 	MainConfig() {
 		desiredFps = 30;
-		scaling = 2;
+		scaling = 4;
 		autostart = quitOnEof = fullscreen = hasAutoFile = hasAutoAudioFile = showBorder = false;
 		useUI = useKeys = audioEnabled = true;
 
@@ -61,6 +61,9 @@ struct MainRunState {
 
 	TransportState transport;
 	TransportState nextTransport;
+	
+	uint8_t channel;
+	uint8_t nextChannel;
 
 	double nextLoc;
 
@@ -76,6 +79,9 @@ struct MainRunState {
 
 		transport = T_STOP;
 		nextTransport = T_NOCHANGE;
+		
+		channel = 1;
+		nextChannel = 1;
 
 		nextLoc = -1;
 

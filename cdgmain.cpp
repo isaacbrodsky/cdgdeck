@@ -224,6 +224,10 @@ int main( int argc, char* argv[] ) {
 				process_save_cdg(*cdg, !config.showBorder);
 				run.dumpImage = false;
 			}
+			if (run.nextChannel != run.channel) {
+				cdg->setChannel(run.nextChannel);
+				run.channel = run.nextChannel;
+			}
 		}
 		run.nextTransport = T_NOCHANGE;
 

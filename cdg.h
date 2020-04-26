@@ -234,6 +234,7 @@ private:
 
 	uint8_t ph, pv;
 	uint8_t border;
+	uint8_t channel;
 
 	//private functions
 	static bool readNext(istream &in, SubCode &out);
@@ -262,6 +263,9 @@ public:
 	uint8_t getPixel(int x, int y) const;
 	void getPointers(uint8_t &v, uint8_t &h) const;
 	uint8_t getBorderColor() const;
+	
+	uint8_t getChannel() const;
+	void setChannel(uint8_t);
 
 	void execNext(const SubCode&);
 	void execNext(const SubCode&, int&);

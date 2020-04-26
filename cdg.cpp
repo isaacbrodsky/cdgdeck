@@ -54,6 +54,7 @@ CDG::CDG()
 
 	ph = pv = 0;
 	border = 0;
+	channel = 1;
 }
 
 //***************************************************************************
@@ -313,6 +314,20 @@ uint8_t CDG::getBorderColor() const
 }
 
 //***************************************************************************
+// Returns the channel number being decoded. Channel 0 is always decoded.
+//***************************************************************************
+uint8_t CDG::getChannel() const {
+	return channel;
+}
+
+//***************************************************************************
+// Sets the channel number being decoded. Channel 0 is always decoded.
+//***************************************************************************
+void CDG::setChannel(uint8_t newChannel) {
+	channel = newChannel;
+}
+
+//***************************************************************************
 // Executes the given MEMORYPRESET command on this CDG decoder.
 //
 // MEMORYPRESET commands clear the screen (and the PV/PH offsets.) The screen
@@ -362,19 +377,12 @@ void CDG::execBorderPreset(const SubCode &subCode)
 // Executes the given TILE or TILEXOR command on this CDG decoder.
 //
 // TILE (or FONT) commands are used to draw a block of data to the screen.
-//
-// Note: the spec. has a "channel" field packed into the TILE data,
-// most disks do not use this and I do not have a disk to test this feature
-// with or a reference decoder that supports it, so I have not implemented
-// it.
 //***************************************************************************
 void CDG::execTile(const SubCode &subCode)
 {
 	uint8_t color[2];
-	uint8_t channel;			// I believe Lou Reed's "New York"
-							// uses channels but I do not
-							// have this disk to test this
-							// feature.
+	uint8_t channel;			// Lou Reed's "New York" uses channels.
+	
 	bool useXor = ((subCode.instruction & LOWER_6_BITS) == CDG_TILEBLOCKXOR);
 	int point;
 
@@ -386,6 +394,14 @@ void CDG::execTile(const SubCode &subCode)
 	
 	channel = (subCode.data.tileDat.color0) >> 4;
 	channel = (channel << 2) | (subCode.data.tileDat.color1 >> 4);
+	
+	// Channel 0 is always shown - otherwise check that the channel
+	// matches the user's selection
+	// TODO: Sega Saturn may allow the user to select arbitrary
+	// sets of channels and deselect 0. Could in the future support this.
+	if (channel != 0 && channel != this->channel) {
+		return;
+	}
 
 	if (row < CDG_HEIGHT || col < CDG_WIDTH)	//not offscreen
 	{
