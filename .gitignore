@@ -244,4 +244,15 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 
+cdgdeck
 build/
+
+vcpkg/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+*.cdg
