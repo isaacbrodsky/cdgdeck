@@ -82,6 +82,9 @@ void CDGUI::processMouseDown(MainRunState *run, const MainConfig *config) {
 	case B_SEEKBAR:
 		btnSeekbarDown = true;
 		break;
+	case B_NONE:
+		// Do nothing
+		break;
 	}
 }
 
@@ -124,6 +127,9 @@ void CDGUI::processMouseUp(MainRunState *run, const MainConfig *config) {
 			//cout << (percent * 100) << "%" << endl;
 			run->nextLoc = percent;
 		}
+		break;
+	case B_NONE:
+		// Do nothing
 		break;
 	}
 	
@@ -197,7 +203,11 @@ void CDGUI::render(SDL_Renderer *renderer, const MainRunState *run, const MainCo
 		
 		int limsecs = CDG::sizeToSeconds(run->cdgStat.st_size);
 		int cursecs = CDG::sizeToSeconds(run->cdgLoc);
+#ifdef WIN32
 		sprintf_s(postext, 78, "%i / %i (seconds)", cursecs, limsecs);
+#else
+		sprintf(postext, "%i / %i (seconds)", cursecs, limsecs);
+#endif
 		render_text(renderer, (UI_WIDTH * 6) + 4, hoff + 4, font, text, postext);
 	}
 }
