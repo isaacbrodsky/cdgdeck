@@ -89,7 +89,14 @@ bool save_cdg_screen(const CDG &cdg, bool maskBorder, const char *file)
     png_byte ** row_pointers = NULL;
     int pixel_size = 4; //rgba
     
-    if (file && !fopen_s(&fp, file, "wb"))
+#ifdef WIN32
+	bool fileIsOpen = !fopen_s(&fp, file, "wb");
+#else
+	fp = fopen(file, "wb");
+	bool fileIsOpen = !fp;
+#endif
+	
+    if (file && fileIsOpen)
 	{
 		png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 		if (png_ptr)

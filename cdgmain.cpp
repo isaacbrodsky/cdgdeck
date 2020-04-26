@@ -2,6 +2,7 @@
 // Isaac Brodsky
 // 2012 AUGUST 6
 
+#include <cstring>
 #include "stdafx.h"
 #include "cdg.h"
 #include "cdgmain.h"
@@ -14,6 +15,11 @@
 #include <sys/stat.h>
 
 #include "gen.h"
+
+#ifdef WIN32
+// Only available in POSIX
+#define strcasecmp _stricmp
+#endif
 
 //Defines
 #define DEFAULT_WIDTH CDG_WIDTH
@@ -306,7 +312,7 @@ void process_input(MainRunState *run, const MainConfig *config, CDGUI *ui) {
 							cdg_init(&cdg, screen->format);*/
 							break;
 						case SDLK_F1:
-							fl_message(COPYRIGHT_MESSAGE);
+							fl_message("%s", COPYRIGHT_MESSAGE);
 							break;
 						case SDLK_s:
 							run->dumpImage = true;
@@ -427,63 +433,63 @@ int open_filechooser(MainRunState *run, bool music) {
 
 void process_args(int argc, char* argv[], MainConfig *config) {
 	for (int i = 1; i < argc; i++) {
-		if (_stricmp(argv[i], "-fps") == 0) {
+		if (strcasecmp(argv[i], "-fps") == 0) {
 			i++;
 			if (i < argc) {
 				config->desiredFps = atoi(argv[i]);
 			}
-		} else if (_stricmp(argv[i], "-help") == 0) {
+		} else if (strcasecmp(argv[i], "-help") == 0) {
 			cout << "usage: " << argv[0] << " [-help] [-quitonend] [-noaudio] [-noui] [-nokeys] [-autostart] [-seek (direct|enhanced)] [-scaling #] [-w #] [-h #] [-fullscreen|-windowed] [-audio file] [-] [file]" << endl;
 			cout << COPYRIGHT_MESSAGE;
 			exit(0);
-		} else if (_stricmp(argv[i], "-quitonend") == 0) {
+		} else if (strcasecmp(argv[i], "-quitonend") == 0) {
 			config->quitOnEof = true;
-		} else if (_stricmp(argv[i], "-noui") == 0) {
+		} else if (strcasecmp(argv[i], "-noui") == 0) {
 			config->useUI = false;
-		} else if (_stricmp(argv[i], "-nokeys") == 0) {
+		} else if (strcasecmp(argv[i], "-nokeys") == 0) {
 			config->useKeys = false;
-		} else if (_stricmp(argv[i], "-noaudio") == 0) {
+		} else if (strcasecmp(argv[i], "-noaudio") == 0) {
 			config->audioEnabled = false;
-		} else if (_stricmp(argv[i], "-autostart") == 0) {
+		} else if (strcasecmp(argv[i], "-autostart") == 0) {
 			config->autostart = true;
-		} else if (_stricmp(argv[i], "-seek") == 0) {
+		} else if (strcasecmp(argv[i], "-seek") == 0) {
 			i++;
 			if (i < argc) {
-				if (_stricmp(argv[i], "direct") == 0)
+				if (strcasecmp(argv[i], "direct") == 0)
 					config->seek = SeekMode::SEEK_DIRECT;
-				else if (_stricmp(argv[i], "enhanced") == 0)
+				else if (strcasecmp(argv[i], "enhanced") == 0)
 					config->seek = SeekMode::SEEK_ENHANCED;
 				else
 					cerr << "Bad value for -seek ... use 'direct' or 'enhanced'" << endl;
 			} else {
 				cerr << "No value for -seek ... use 'direct' or 'enhanced'" << endl;
 			}
-		} else if (_stricmp(argv[i], "-scaling") == 0) {
+		} else if (strcasecmp(argv[i], "-scaling") == 0) {
 			i++;
 			if (i < argc) {
 				config->scaling = atoi(argv[i]);
 			} else {
 				cerr << "No value for -scaling" << endl;
 			}
-		} else if (_stricmp(argv[i], "-fullscreen") == 0) {
+		} else if (strcasecmp(argv[i], "-fullscreen") == 0) {
 			config->fullscreen = true;
-		} else if (_stricmp(argv[i], "-windowed") == 0) {
+		} else if (strcasecmp(argv[i], "-windowed") == 0) {
 			config->fullscreen = false;
-		} else if (_stricmp(argv[i], "-w") == 0) {
+		} else if (strcasecmp(argv[i], "-w") == 0) {
 			i++;
 			if (i < argc) {
 				config->woverride = atoi(argv[i]);
 			} else {
 				cerr << "No value for -w" << endl;
 			}
-		} else if (_stricmp(argv[i], "-h") == 0) {
+		} else if (strcasecmp(argv[i], "-h") == 0) {
 			i++;
 			if (i < argc) {
 				config->hoverride = atoi(argv[i]);
 			} else {
 				cerr << "No value for -h" << endl;
 			}
-		} else if (_stricmp(argv[i], "-audio") == 0) {
+		} else if (strcasecmp(argv[i], "-audio") == 0) {
 			i++;
 			if (i < argc) {
 				config->autoAudioFile = argv[i];
@@ -491,11 +497,11 @@ void process_args(int argc, char* argv[], MainConfig *config) {
 			} else {
 				cerr << "No value for -audio" << endl;
 			}
-		} else if (_stricmp(argv[i], "-showborder") == 0) {
+		} else if (strcasecmp(argv[i], "-showborder") == 0) {
 			config->showBorder = true;
-		} else if (_stricmp(argv[i], "-gen") == 0) {
+		} else if (strcasecmp(argv[i], "-gen") == 0) {
 			exit(genmain());
-		} else if (_stricmp(argv[i], "-") == 0) {
+		} else if (strcasecmp(argv[i], "-") == 0) {
 			string s = "";
 			for (int j = i + 1; j < argc; j++) {
 				if (j != i + 1)

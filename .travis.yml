@@ -1,4 +1,4 @@
-language: c
+language: cpp
 
 os: linux
 dist: bionic
@@ -16,7 +16,8 @@ install:
   - git checkout .
   - CURRENT_VCPKG_REV="$(git rev-parse HEAD)"
   - git pull
-  - NEW_VCPKG_REV="$(git rev-parse HEAD)"
+  # Update this to update the vcpkg version
+  - NEW_VCPKG_REV=28ab0b15cd7cdc1004cac9a28a5ecab198c161b9
   # Avoid rebuilding vcpkg itself unless it was not cached, or an update has been pulled.
   - if [ "$VCPKG_CACHED" -a "$NEW_VCPKG_REV" == "$CURRENT_VCPKG_REV" ] ; then echo vcpkg bootstrap skipped ; else ./bootstrap-vcpkg.sh ; fi
   # Install our C++ dependencies:
@@ -26,13 +27,13 @@ install:
 
 cache:
   directories:
-    - ${VCPKG_ROOT}
+    - ${HOME}/vcpkg
 
 before_script:
   # Build out of source
   - mkdir build
   - cd build
-  - cmake -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake ..
+  - cmake -DCMAKE_TOOLCHAIN_FILE=${HOME}/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 
 script:
   - make -j 2

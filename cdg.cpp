@@ -209,7 +209,7 @@ void CDG::fillPixels(int xs, int ys, int xe, int ye, uint8_t color)
 // If xor is true, the new color is XORed with the previous value at the
 // given location. This means the new index is XORed with the old index.
 //***************************************************************************
-void CDG::putPixel(int x, int y, uint8_t color, bool xor)
+void CDG::putPixel(int x, int y, uint8_t color, bool isXor)
 {
 	if (x < CDG_WIDTH && x >= 0
 		&& y < CDG_HEIGHT && y >= 0)
@@ -217,7 +217,7 @@ void CDG::putPixel(int x, int y, uint8_t color, bool xor)
 #ifdef SHRINK_CDG
 		//determine new color
 		uint8_t newcolor;
-		if (xor)
+		if (isXor)
 		{
 			newcolor = getPixel(x, y);
 			newcolor ^= color;
@@ -233,7 +233,7 @@ void CDG::putPixel(int x, int y, uint8_t color, bool xor)
 		else
 			screen[x][y / 2] = (screen[x][y / 2] & ~LOWER_4_BITS) | newcolor;
 #else
-		if (xor)
+		if (isXor)
 			screen[x][y] ^= color;
 		else
 			screen[x][y] = color;

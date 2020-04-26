@@ -244,7 +244,7 @@ private:
 	void loadColor(int idx, short col);
 
 	void fillPixels(int x1, int y1, int x2, int y2, uint8_t color);
-	void putPixel(int x, int y, uint8_t color, bool xor = false);
+	void putPixel(int x, int y, uint8_t color, bool isXor = false);
 	
 	void execLoadct(const SubCode&);
 	void execMemoryPreset(const SubCode&);
