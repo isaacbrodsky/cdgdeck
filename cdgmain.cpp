@@ -196,6 +196,9 @@ int main( int argc, char* argv[] ) {
 					run.audio = NULL;
 				}
 				break;
+			case T_NOCHANGE:
+				// Do nothing.
+				break;
 			}
 			if (run.nextTransport != T_NOCHANGE)
 				run.transport = run.nextTransport;

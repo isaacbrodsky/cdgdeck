@@ -82,6 +82,9 @@ void CDGUI::processMouseDown(MainRunState *run, const MainConfig *config) {
 	case B_SEEKBAR:
 		btnSeekbarDown = true;
 		break;
+	case B_NONE:
+		// Do nothing
+		break;
 	}
 }
 
@@ -124,6 +127,9 @@ void CDGUI::processMouseUp(MainRunState *run, const MainConfig *config) {
 			//cout << (percent * 100) << "%" << endl;
 			run->nextLoc = percent;
 		}
+		break;
+	case B_NONE:
+		// Do nothing
 		break;
 	}
 	
