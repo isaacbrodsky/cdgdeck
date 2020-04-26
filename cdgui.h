@@ -4,7 +4,7 @@
 
 */
 
-#define UI_NUM_BUTTONS 6
+#define UI_NUM_BUTTONS 9
 #define UI_HEIGHT 24
 #define UI_WIDTH (24*2)
 
@@ -16,13 +16,15 @@ enum Button {
 	B_SAVEIMAGE,
 	B_PAUSE,
 	B_STOP,
+	B_CHANNEL_DOWN,
+	B_CHANNEL_UP,
 	B_SEEKBAR = 100
 };
 
 class CDGUI {
 
 private:
-	bool btnPlayDown, btnLoadCDGDown, btnLoadAudioDown, btnSaveImageDown, btnPauseDown, btnStopDown, btnSeekbarDown;
+	bool btnPlayDown, btnLoadCDGDown, btnLoadAudioDown, btnSaveImageDown, btnPauseDown, btnStopDown, btnChannelDownDown, btnChannelUpDown, btnSeekbarDown;
 	TTF_Font *font;
 	SDL_RWops *_fontMem;
 

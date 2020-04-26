@@ -38,9 +38,7 @@ make
 # History
 
 This code was originally written around 2012-2013. It was mainly tested against *Information Society* (the disc I originally learned about CD+G from), and then later against Jimi Hendrix Experience' *Smash Hits* (probably one of the most technically and 
-artistically developed CD+G discs.)
-
-Lou Reed's *New York* may be one of the few discs that support alternate CD+G channels (for translated lyrics), but this has not been implemented here. Still, I think this application is one of the most correct open source CD+G implementations available. 
+artistically developed CD+G discs.) Lour Reed's *New York* may be one of the few discs that support alternate CD+G channels, for translated lyrics. I think this application is one of the most correct open source CD+G implementations available. 
 Compare to VLC, which as of writing does not play *Smash Hits* correctly because of an incorrect implementation of `BORDERPRESET`.
 
 The code was somewhat updated in 2020 to use SDL2 and published.
