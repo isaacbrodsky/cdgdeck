@@ -46,7 +46,8 @@ I think this application is one of the most correct open source CD+G implementat
 
 The code was somewhat updated in 2020 to use SDL2 and published.
 
-# Legal
+# License
 
-License TBD
+[./LICENSE.txt](BSD License)
+
 Copyright 2020 Isaac Brodsky
