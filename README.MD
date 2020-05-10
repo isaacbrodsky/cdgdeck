@@ -48,6 +48,6 @@ The code was somewhat updated in 2020 to use SDL2 and published.
 
 # License
 
-[./LICENSE.txt](BSD License)
+[BSD License](./LICENSE.txt)
 
 Copyright 2020 Isaac Brodsky
