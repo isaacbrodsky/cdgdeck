@@ -13,9 +13,11 @@ jobs:
 
     strategy:
       matrix:
-        config:
-          - { cc: clang, cxx: clang++}
-          - { cc: gcc, cxx: g++}
+        include:
+          - cc: clang
+            cxx: clang++
+          - cc: gcc
+            cxx: g++
 
     steps:
       - uses: actions/checkout@v2
