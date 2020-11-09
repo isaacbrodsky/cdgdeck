@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   test:
-    name: test ${{ matrix.compiler }}
+    name: test ${{ matrix.cxx }}
     runs-on: ubuntu-latest
 
     env:
