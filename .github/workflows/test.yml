@@ -8,11 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CC: ${{ matrix.compiler }}
+      CC: ${{ matrix.cc }}
+      CXX: ${{ matrix.cxx }}
 
     strategy:
       matrix:
-        compiler: [clang, gcc]
+        config:
+          - { cc: clang, cxx: clang++}
+          - { cc: gcc, cxx: g++}
 
     steps:
       - uses: actions/checkout@v2
@@ -21,12 +24,13 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/vcpkg
-          key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/.github/actions/*') }}
+          key: ${{ runner.os }}-vcpkg-${{ hashFiles('**/vcpkg_deps.txt') }}
           restore-keys: ${{ runner.os }}-vcpkg
 
       - name: Prepare vcpkg
         run: |
           # Adapted from https://github.com/UnfoldedInc/deck.gl-native/blob/8efa577bcd8ebefbe8a6a996936efaa388a198e4/.travis.yml
+          VCPKG_DEPENDENCIES=$(<vcpkg_deps.txt)
           # Install vcpkg and dependencies
           pushd $HOME
           if [ -d "$HOME/vcpkg/.git" ] ; then echo vcpkg cached ; VCPKG_CACHED=1 ; else rm -rf vcpkg ; git clone https://github.com/Microsoft/vcpkg ; fi
@@ -38,8 +42,8 @@ jobs:
           NEW_VCPKG_REV=28ab0b15cd7cdc1004cac9a28a5ecab198c161b9
           # Avoid rebuilding vcpkg itself unless it was not cached, or an update has been pulled.
           if [ "$VCPKG_CACHED" -a "$NEW_VCPKG_REV" == "$CURRENT_VCPKG_REV" ] ; then echo vcpkg bootstrap skipped ; else ./bootstrap-vcpkg.sh ; fi
-          # Install our C++ dependencies:
-          ./vcpkg install sdl2 sdl2-mixer sdl2-ttf libpng zlib fltk --recurse
+          # Install our C++ dependencies - note that we do not quote here
+          ./vcpkg install $VCPKG_DEPENDENCIES --recurse
           rm -rf buildtrees
 
       - name: Configure
