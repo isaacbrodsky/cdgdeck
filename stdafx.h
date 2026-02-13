@@ -15,15 +15,13 @@
 using namespace std;
 
 // C RunTime Header Files
-#include <stdlib.h>
-#include <malloc.h>
-#include <memory.h>
+#include <cstdlib>
 
 #include <string>
 #include <fstream>
 
-#include <time.h>
-#include <assert.h>
+#include <ctime>
+#include <cassert>
 
 #include "SDL.h"
 #include "SDL_ttf.h"

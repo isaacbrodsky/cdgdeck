@@ -247,8 +247,6 @@ ModelManifest.xml
 cdgdeck
 build/
 
-vcpkg/
-
 # CMake
 CMakeCache.txt
 CMakeFiles/
@@ -256,3 +254,5 @@ Makefile
 cmake_install.cmake
 
 *.cdg
+
+vcpkg_installed/

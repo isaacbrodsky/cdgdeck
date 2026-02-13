@@ -1,1 +1,0 @@
-sdl2 sdl2-mixer sdl2-ttf libpng zlib fltk
