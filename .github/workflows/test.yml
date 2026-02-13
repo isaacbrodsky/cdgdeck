@@ -20,6 +20,9 @@ jobs:
             cxx: g++
 
     steps:
+      - name: Install pre-deps
+        run: sudo apt install autoconf autoconf-archive automake libtool
+
       - uses: actions/checkout@v6
         with:
           submodules: 'recursive'
